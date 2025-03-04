@@ -1,15 +1,8 @@
 import { createApp } from 'vue';
-import { createStore } from 'vuex';
 
 import App from './App.vue';
+import store from './store/index.js';
 
-const store = createStore({
-    state() {
-        return {
-            counter: 0
-        }
-    } 
-});
 
 const app = createApp(App);
 
