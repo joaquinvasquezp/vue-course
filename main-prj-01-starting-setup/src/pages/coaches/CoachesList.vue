@@ -1,33 +1,35 @@
 <template>
-    <base-dialog :show="!!error" title="An error ocurred!" @close="handleError"> <!-- converts a string (truhtly) to boolean -->
-        <p>{{ error }}</p>
-    </base-dialog>
-    <section>
-        <coach-filter @change-filter="setFilters"></coach-filter>
-    </section>
-    <section>
-        <base-card>
-            <div class="controls">
-                <base-button mode="outline" @click="loadCoaches">Refresh list</base-button>
-                <base-button link to="/register" v-if="!isCoach && !isLoading">Register as Coach</base-button>
-            </div>
-            <div v-if="isLoading">
-                <base-spinner></base-spinner>
-            </div>
-            <ul v-else-if="hasCoaches">
-                <coach-item
-                    v-for="coach in filteredCoaches"
-                    :key="coach.id"
-                    :id="coach.id"
-                    :first-name="coach.firstName"
-                    :last-name="coach.lastName"
-                    :rate="coach.hourlyRate"
-                    :areas="coach.areas"
-                ></coach-item>
-            </ul>
-            <h3 v-else>No coaches found.</h3>
-        </base-card>
-    </section>
+    <div>
+        <base-dialog :show="!!error" title="An error ocurred!" @close="handleError"> <!-- converts a string (truhtly) to boolean -->
+            <p>{{ error }}</p>
+        </base-dialog>
+        <section>
+            <coach-filter @change-filter="setFilters"></coach-filter>
+        </section>
+        <section>
+            <base-card>
+                <div class="controls">
+                    <base-button mode="outline" @click="loadCoaches(true)">Refresh list</base-button>
+                    <base-button link to="/register" v-if="!isCoach && !isLoading">Register as Coach</base-button>
+                </div>
+                <div v-if="isLoading">
+                    <base-spinner></base-spinner>
+                </div>
+                <ul v-else-if="hasCoaches">
+                    <coach-item
+                        v-for="coach in filteredCoaches"
+                        :key="coach.id"
+                        :id="coach.id"
+                        :first-name="coach.firstName"
+                        :last-name="coach.lastName"
+                        :rate="coach.hourlyRate"
+                        :areas="coach.areas"
+                    ></coach-item>
+                </ul>
+                <h3 v-else>No coaches found.</h3>
+            </base-card>
+        </section>
+    </div>
 </template>
 
 <script>
@@ -79,11 +81,11 @@ export default {
         setFilters(updatedFilters) {
             this.activeFilter = updatedFilters;
         },
-        async loadCoaches() {
+        async loadCoaches(refresh = false) {
             this.isLoading = true
             
             try {
-                await this.$store.dispatch('coaches/loadCoaches');
+                await this.$store.dispatch('coaches/loadCoaches', {forceRefresh: refresh});
             } catch (error) {
                 this.error = error.message || 'Something went wrong!';
             }
