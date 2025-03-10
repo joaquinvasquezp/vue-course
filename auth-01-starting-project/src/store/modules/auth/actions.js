@@ -27,7 +27,7 @@ export default {
     },
     async auth(context, payload) {
         const mode = payload.mode;
-        const API_KEY = 'AIzaSyBbrS04pTctBcN5-3Uf8-bgEi_mJG8pwOM';
+        const API_KEY = '';
         let url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`;
 
         if (mode === 'signup') {
